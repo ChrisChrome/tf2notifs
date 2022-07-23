@@ -40,7 +40,7 @@ tf2.on("itemBroadcast", (msg, username, wasDestruction, defindex) => {
 })
 
 tf2.on("displayNotification", (title, body) => {
-I'm	console.log(`New Notif: ${title}: ${body}`)
+	console.log(`New Notif: ${title}: ${body}`)
 	ring_hook.send({embeds: [
 		{
 			description: body,

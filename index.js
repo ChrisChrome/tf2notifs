@@ -29,7 +29,6 @@ tf2.on("systemMessage", (msg) => {
 	notif_hook.send({embeds: [
 		{
 			description: msg,
-			timestamp: new Date(),
 			color: Discord.Colors.Gold
 		}
 	]})
@@ -41,11 +40,10 @@ tf2.on("itemBroadcast", (msg, username, wasDestruction, defindex) => {
 })
 
 tf2.on("displayNotification", (title, body) => {
-	console.log(`New Notif: ${title}: ${body}`)
+I'm	console.log(`New Notif: ${title}: ${body}`)
 	ring_hook.send({embeds: [
 		{
 			description: body,
-			timestamp: new Date(),
 			color: Discord.Colors.Gold
 		}
 	]})

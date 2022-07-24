@@ -14,18 +14,18 @@ user.logOn(config.steam);
 
 user.on("loggedOn", (stuff) => {
 	//user.setPersona(1); //Just needed this to check that it was logging in properly, and not false reporting a successful log in lol
-	console.log("Logged into steam")
+	console.log("[Steam] Logged into steam")
 	user.gamesPlayed([440]);
 	tf2.setLang(fs.readFileSync("./tf_english.txt").toString())
-	if(tf2.lang) console.log("Updated the localization files")
+	if(tf2.lang) console.log("[TF2] Updated the localization files")
 })
 
 tf2.on("connectedToGC", (ver) => {
-	console.log(`Connected to Game Coordinator, Listening for events!`)
+	console.log(`[TF2] Connected to GC`)
 })
 
 tf2.on("systemMessage", (msg) => {
-	console.log(`New System Message: ${msg}`)
+	console.log(`[TF2] New System Message: ${msg}`)
 	notif_hook.send({embeds: [
 		{
 			description: msg,
@@ -35,12 +35,12 @@ tf2.on("systemMessage", (msg) => {
 })
 
 tf2.on("itemBroadcast", (msg, username, wasDestruction, defindex) => {
-	console.log(`New Item BC:\nMsg:${msg}\nUser:${username}\nDestroy?:${wasDestruction}`)
+	console.log(`[TF2] New Item :\nMsg:${msg}\nUser:${username}\nDestroy?:${wasDestruction}`)
 
 })
 
 tf2.on("displayNotification", (title, body) => {
-	console.log(`New Notif: ${title}: ${body}`)
+	console.log(`[TF2] New Notif: ${title}: ${body}`)
 	ring_hook.send({embeds: [
 		{
 			description: body,
@@ -50,7 +50,7 @@ tf2.on("displayNotification", (title, body) => {
 })
 
 bot.on("ready", () => {
-	console.log("Logged into Discord");
+	console.log(`[Discord] Logged in as ${bot.user.tag}`);
 })
 
 bot.on("messageCreate", (msg) => {

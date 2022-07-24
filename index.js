@@ -35,7 +35,13 @@ tf2.on("systemMessage", (msg) => {
 })
 
 tf2.on("itemBroadcast", (msg, username, wasDestruction, defindex) => {
-	console.log(`[TF2] New Item :\nMsg:${msg}\nUser:${username}\nDestroy?:${wasDestruction}`)
+	console.log(`[TF2] New Item :\nMsg:${msg}\nUser:${username}\nDestroy?:${wasDestruction}`);
+	pan_hook.send({content: wasDestruction?"@everyone":"",embeds: [
+		{
+			description: msg,
+			color: wasDestruction?Discord.Colors.Red:Discord.Colors.Gold
+		}
+	]})
 
 })
 

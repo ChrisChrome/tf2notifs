@@ -65,5 +65,5 @@ bot.on("messageCreate", (msg) => {
 		msg.crosspost();
 	}
 })
-
+console.clear(); //Just makes shit look good, if you don't like it, remove it
 bot.login(config.discord.token);

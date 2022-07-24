@@ -29,7 +29,7 @@ tf2.on("systemMessage", (msg) => {
 	notif_hook.send({embeds: [
 		{
 			description: msg,
-			color: Discord.Colors.Gold
+			color: Discord.Colors.Blue
 		}
 	]})
 })
@@ -54,6 +54,7 @@ bot.on("ready", () => {
 })
 
 bot.on("messageCreate", (msg) => {
+	if(msg.author.bot) return;
 	if (config.discord.channels.includes(msg.channel.id)) {
 		msg.crosspost();
 	}

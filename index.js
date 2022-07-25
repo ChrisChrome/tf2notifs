@@ -6,7 +6,7 @@ const Discord = require("discord.js");
 const bot = new Discord.Client({intents: ["GuildMessages", "Guilds", "MessageContent"]});
 const ring_hook = new Discord.WebhookClient({"url": config.discord.ring_webhook});
 const notif_hook = new Discord.WebhookClient({"url": config.discord.notification_webhook}, {"allowedMentions": false});
-const pan_hook = new Discord.WebhookClient({"url": config.discord.pan_webhook}, {"allowedMentions": false});
+const pan_hook = new Discord.WebhookClient({"url": config.discord.pan_webhook});
 let user = new SteamUser();
 let tf2 = new TeamFortress2(user);
 
@@ -36,7 +36,7 @@ tf2.on("systemMessage", (msg) => {
 
 tf2.on("itemBroadcast", (msg, username, wasDestruction, defindex) => {
 	console.log(`[TF2] New Item :\nMsg:${msg}\nUser:${username}\nDestroy?:${wasDestruction}`);
-	pan_hook.send({content: wasDestruction?"@everyone":"",embeds: [
+	pan_hook.send({content: "@everyone",embeds: [
 		{
 			description: msg,
 			color: wasDestruction?Discord.Colors.Red:Discord.Colors.Gold

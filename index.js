@@ -55,7 +55,7 @@ tf2.on("systemMessage", (msg) => {
 	console.log(`${colors.yellow("[TF2]")} New System Message: ${msg}`)
 	notif_hook.send({embeds: [
 		{
-			description: msg,
+			description: `<:Messages:1151242960655089744> ${msg}`,
 			color: 0x3498DB
 		}
 	]})
@@ -65,7 +65,7 @@ tf2.on("itemBroadcast", (msg, username, wasDestruction, defindex) => {
 	console.log(`${colors.yellow("[TF2]")} New Item :$ {msg}`);
 	pan_hook.send({content: wasDestruction?"@everyone":"",embeds: [
 		{
-			description: msg,
+			description: `<:Alert:1151242961485562008> ${msg}`,
 			color: wasDestruction?0xff0000:0xF1C40F
 		}
 	]})
@@ -75,7 +75,7 @@ tf2.on("displayNotification", (title, body) => {
 	console.log(`${colors.yellow("[TF2]")} New Notif: ${title}: ${body}`)
 	ring_hook.send({embeds: [
 		{
-			description: body,
+			description: `<:Alert:1151242961485562008> ${body}`,
 			color: 0xF1C40F
 		}
 	]})

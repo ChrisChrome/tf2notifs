@@ -13,25 +13,25 @@ const pan_hook = new Discord.WebhookClient({"url": config.discord.pan_webhook});
 let user = new SteamUser();
 let tf2 = new TeamFortress2(user);
 // Get lang file from tf wiki  https://wiki.teamfortress.com/w/images/c/cf/Tf_english.txt
-console.log(`${colors.blue("[Lang]")} Getting TF2 Lang File from wiki`);
+console.log(`${colors.green("[Lang]")} Getting TF2 Lang File from wiki`);
 axios.get("https://wiki.teamfortress.com/w/images/c/cf/Tf_english.txt").then((res) => {
-	console.log(`${colors.blue("[Lang]")} Got TF2 Lang File from wiki`);
+	console.log(`${colors.green("[Lang]")} Got TF2 Lang File from wiki`);
 	// set lang from body
 	tf2.setLang(res.data)
 	// Save a local copy
 	fs.writeFileSync("./tf_english.txt", res.data);
-	console.log(`${colors.blue("[Lang]")} Saved backup TF2 Lang File`);
+	console.log(`${colors.green("[Lang]")} Saved backup TF2 Lang File`);
 	if (tf2.lang) return console.log(`${colors.yellow("[TF2]")} Loaded TF2 Lang File`);
-	console.log(`${colors.blue("[Lang]")} Failed to load TF2 Lang File`);
+	console.log(`${colors.green("[Lang]")} Failed to load TF2 Lang File`);
 }).catch((err) => {
-	console.log(`${colors.blue("[Lang]")} Failed to load TF2 Lang File from wiki, trying local file`);
+	console.log(`${colors.green("[Lang]")} Failed to load TF2 Lang File from wiki, trying local file`);
 	// try to load local file
 	try {
 		tf2.setLang(fs.readFileSync("./tf_english.txt", "utf8"));
 		if (tf2.lang) return console.log(`${colors.yellow("[TF2]")} Loaded TF2 Lang File`);
-		console.log(`${colors.blue("[Lang]")} Failed to load TF2 Lang File`);
+		console.log(`${colors.green("[Lang]")} Failed to load TF2 Lang File`);
 	} catch (err) {
-		console.log(`${colors.blue("[Lang]")} Failed to load TF2 Lang File`);
+		console.log(`${colors.green("[Lang]")} Failed to load TF2 Lang File`);
 	}
 })
 user.logOn(config.steam);

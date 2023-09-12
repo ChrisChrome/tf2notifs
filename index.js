@@ -1,6 +1,7 @@
 const config = require("./config.json");
 const colors = require("colors");
 const axios = require("axios");
+const fs = require("fs");
 const SteamUser = require("steam-user");
 const TeamFortress2 = require("tf2");
 const Discord = require("discord.js");
@@ -15,11 +16,21 @@ let tf2 = new TeamFortress2(user);
 axios.get("https://wiki.teamfortress.com/w/images/c/cf/Tf_english.txt").then((res) => {
 	// set lang from body
 	tf2.setLang(res.data)
+	// Save a local copy
+	fs.writeFileSync("./tf_english.txt", res.data);
+	console.log(`${colors.yellow("[TF2]")} Saved backup TF2 Lang File`);
 	if (tf2.lang) return console.log(`${colors.yellow("[TF2]")} Loaded TF2 Lang File`);
 	console.log(`${colors.red("[TF2]")} Failed to load TF2 Lang File`);
 }).catch((err) => {
-	console.log(`${colors.red("[TF2]")} Failed to load TF2 Lang File`);
-	console.log(err);
+	console.log(`${colors.red("[TF2]")} Failed to load TF2 Lang File from wiki, trying local file`);
+	// try to load local file
+	try {
+		tf2.setLang(fs.readFileSync("./tf_english.txt", "utf8"));
+		if (tf2.lang) return console.log(`${colors.yellow("[TF2]")} Loaded TF2 Lang File`);
+		console.log(`${colors.red("[TF2]")} Failed to load TF2 Lang File`);
+	} catch (err) {
+		console.log(`${colors.red("[TF2]")} Failed to load TF2 Lang File`);
+	}
 })
 user.logOn(config.steam);
 

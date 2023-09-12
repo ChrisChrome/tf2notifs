@@ -1,6 +1,6 @@
 const config = require("./config.json");
 const colors = require("colors");
-const fs = require("fs");
+const axios = require("axios");
 const SteamUser = require("steam-user");
 const TeamFortress2 = require("tf2");
 const Discord = require("discord.js");
@@ -11,20 +11,27 @@ const notif_hook = new Discord.WebhookClient({"url": config.discord.notification
 const pan_hook = new Discord.WebhookClient({"url": config.discord.pan_webhook});
 let user = new SteamUser();
 let tf2 = new TeamFortress2(user);
-
+// Get lang file from tf wiki  https://wiki.teamfortress.com/w/images/c/cf/Tf_english.txt
+axios.get("https://wiki.teamfortress.com/w/images/c/cf/Tf_english.txt").then((res) => {
+	// set lang from body
+	tf2.setLang(res.data)
+	if (tf2.lang) return console.log(`${colors.yellow("[TF2]")} Loaded TF2 Lang File`);
+	console.log(`${colors.red("[TF2]")} Failed to load TF2 Lang File`);
+}).catch((err) => {
+	console.log(`${colors.red("[TF2]")} Failed to load TF2 Lang File`);
+	console.log(err);
+})
 user.logOn(config.steam);
 
-user.on("loggedOn", (stuff) => {
+user.on("loggedOn", async (stuff) => {
 	//user.setPersona(1); //Just needed this to check that it was logging in properly, and not false reporting a successful log in lol
 	console.log(`${colors.cyan("[Steam]")} Logged into steam`)
-	user.gamesPlayed([440]);
-	tf2.setLang(fs.readFileSync("./tf_english.txt").toString())
-	if(tf2.lang) console.log(`${colors.yellow("[TF2]")} Updated the localization files`)
+	await user.gamesPlayed([440]);
+
 })
 
-tf2.on("connectedToGC", (ver) => {
+tf2.on("connectedToGC", async (ver) => {
 	console.log(`${colors.yellow("[TF2]")} Connected to GC, version: ${ver}`)
-	//sendTestNotifications(); // Added this for debugging
 })
 
 tf2.on("disconnectedFromGC", (reason) => {

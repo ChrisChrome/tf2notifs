@@ -13,7 +13,9 @@ const pan_hook = new Discord.WebhookClient({"url": config.discord.pan_webhook});
 let user = new SteamUser();
 let tf2 = new TeamFortress2(user);
 // Get lang file from tf wiki  https://wiki.teamfortress.com/w/images/c/cf/Tf_english.txt
+console.log(`${colors.yellow("[TF2]")} Getting TF2 Lang File from wiki`);
 axios.get("https://wiki.teamfortress.com/w/images/c/cf/Tf_english.txt").then((res) => {
+	console.log(`${colors.yellow("[TF2]")} Got TF2 Lang File from wiki`);
 	// set lang from body
 	tf2.setLang(res.data)
 	// Save a local copy

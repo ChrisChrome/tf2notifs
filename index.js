@@ -3,6 +3,7 @@ const fs = require("fs");
 const SteamUser = require("steam-user");
 const TeamFortress2 = require("tf2");
 const Discord = require("discord.js");
+const { emit } = require("process");
 const bot = new Discord.Client({intents: ["GuildMessages", "Guilds", "MessageContent"]});
 const ring_hook = new Discord.WebhookClient({"url": config.discord.ring_webhook});
 const notif_hook = new Discord.WebhookClient({"url": config.discord.notification_webhook}, {"allowedMentions": false});
@@ -21,7 +22,8 @@ user.on("loggedOn", (stuff) => {
 })
 
 tf2.on("connectedToGC", (ver) => {
-	console.log(`[TF2] Connected to GC`)
+	console.log(`[TF2] Connected to GC, version: ${ver}`)
+	//sendTestNotifications(); // Added this for debugging
 })
 
 tf2.on("systemMessage", (msg) => {
@@ -29,20 +31,19 @@ tf2.on("systemMessage", (msg) => {
 	notif_hook.send({embeds: [
 		{
 			description: msg,
-			color: Discord.Colors.Blue
+			color: 0x3498DB
 		}
 	]})
 })
 
 tf2.on("itemBroadcast", (msg, username, wasDestruction, defindex) => {
 	console.log(`[TF2] New Item :\nMsg:${msg}\nUser:${username}\nDestroy?:${wasDestruction}`);
-	pan_hook.send({content: "@everyone",embeds: [
+	pan_hook.send({content: wasDestruction?"":"@everyone",embeds: [
 		{
 			description: msg,
-			color: wasDestruction?Discord.Colors.Red:Discord.Colors.Gold
+			color: wasDestruction?0xff0000:0xF1C40F
 		}
 	]})
-
 })
 
 tf2.on("displayNotification", (title, body) => {
@@ -50,7 +51,7 @@ tf2.on("displayNotification", (title, body) => {
 	ring_hook.send({embeds: [
 		{
 			description: body,
-			color: Discord.Colors.Gold
+			color: 0xF1C40F
 		}
 	]})
 })
@@ -65,5 +66,15 @@ bot.on("messageCreate", (msg) => {
 		msg.crosspost();
 	}
 })
+
+const sendTestNotifications = () => {
+	// emit the notifications
+	tf2.emit("systemMessage", "Test Notification");
+	tf2.emit("itemBroadcast", "Test Notification", "Test User", false, 0);
+	tf2.emit("displayNotification", "Test Notification", "Test Notification");
+}
+
+
+
 console.clear(); //Just makes shit look good, if you don't like it, remove it
 bot.login(config.discord.token);

@@ -63,7 +63,7 @@ tf2.on("systemMessage", (msg) => {
 
 tf2.on("itemBroadcast", (msg, username, wasDestruction, defindex) => {
 	console.log(`${colors.yellow("[TF2]")} New Item :$ {msg}`);
-	pan_hook.send({content: wasDestruction?"":"@everyone",embeds: [
+	pan_hook.send({content: wasDestruction?"@everyone":"",embeds: [
 		{
 			description: msg,
 			color: wasDestruction?0xff0000:0xF1C40F

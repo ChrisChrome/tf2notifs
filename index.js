@@ -13,8 +13,6 @@ const pan_hook = new Discord.WebhookClient({ "url": config.discord.pan_webhook }
 let user = new SteamUser();
 let tf2 = new TeamFortress2(user);
 
-user.logOn(config.steam);
-
 user.on("loggedOn", async (stuff) => {
 	//user.setPersona(1); //Just needed this to check that it was logging in properly, and not false reporting a successful log in lol
 	console.log(`${colors.cyan("[Steam]")} Logged into steam`)
@@ -40,12 +38,16 @@ tf2.on("connectedToGC", async (ver) => {
 		// try to load local file
 		try {
 			tf2.setLang(fs.readFileSync("./tf_english.txt", "utf8"));
+			console.log(tf2.lang)
 			if (tf2.lang) return console.log(`${colors.yellow("[TF2]")} Loaded TF2 Lang File`);
 			console.log(`${colors.green("[Lang]")} Failed to load TF2 Lang File`);
 		} catch (err) {
 			console.log(`${colors.green("[Lang]")} Failed to load TF2 Lang File`);
 		}
 	})
+	// Startup time in formatted Mm ss
+	const startupTime = `${Math.floor((Date.now() - initTime) / 60000)}m ${Math.floor((Date.now() - initTime) / 1000) % 60}s`;
+	console.log(`${colors.cyan("[INFO]")} Startup took ${startupTime}`);
 })
 
 tf2.on("disconnectedFromGC", (reason) => {
@@ -65,7 +67,7 @@ tf2.on("systemMessage", (msg) => {
 })
 
 tf2.on("itemBroadcast", (msg, username, wasDestruction, defindex) => {
-	console.log(`${colors.yellow("[TF2]")} New Item :$ {msg}`);
+	console.log(`${colors.yellow("[TF2]")} New Item : ${msg}, ${username}, ${wasDestruction}, ${defindex}`);
 	pan_hook.send({
 		content: wasDestruction ? "@everyone" : "", embeds: [
 			{
@@ -90,6 +92,9 @@ tf2.on("displayNotification", (title, body) => {
 
 bot.on("ready", () => {
 	console.log(`${colors.blue("[Discord]")} Logged in as ${bot.user.tag}`);
+	bot.user.setPresence({ activities: [{ name: 'I am cool', type: 4 }], status: 'idle' });
+	console.log(`${colors.cyan("[Steam]")} Logging into steam`);
+	user.logOn(config.steam);
 })
 
 bot.on("messageCreate", (msg) => {
@@ -105,5 +110,34 @@ const sendTestNotifications = () => {
 }
 
 
+// Catch all errors
+process.on('uncaughtException', async (err) => {
+	await sendLog(`${colors.red("[ERROR]")} Uncaught Exception: ${err}`);
+});
+
+process.on('unhandledRejection', async (err) => {
+	await sendLog(`${colors.red("[ERROR]")} Unhandled Rejection: ${err}`);
+});
+
+
+
+// Handle SIGINT gracefully
+process.on('SIGINT', async () => {
+	setTimeout(() => {
+		console.log(`${colors.red("[ERROR]")} Took too long to exit, exiting forcefully...`);
+		process.exit(1);
+	}, 10000)
+	await console.log(`${colors.cyan("[INFO]")} Stop received, exiting...`);
+	await user.gamesPlayed([]);
+	await user.logOff();
+	await bot.destroy();
+	await console.log(`${colors.cyan("[INFO]")} Goodbye!`);
+	process.exit(0);
+});
+
+
+console.log(`${colors.cyan("[INFO]")} Starting...`)
+// Start timer to see how long startup takes
+const initTime = Date.now()
 
 bot.login(config.discord.token);

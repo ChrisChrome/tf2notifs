@@ -40,8 +40,9 @@ user.on("loggedOn", (stuff) => {
 })
 
 tf2.on("connectedToGC", (ver) => {
-	console.log(`${colors.yellow("TF2")} Connected to GC`)
-	console.log(`${colors.blue("[Info]")} Startup took ${Date.now() - initTime}ms`)
+	console.log(`${colors.yellow("[TF2]")} Connected to GC`)
+	// startup time in seconds
+	console.log(`${colors.blue("[Info]")} Startup took ${(Date.now() - initTime) / 1000} seconds`);
 })
 
 tf2.on("systemMessage", (msg) => {
@@ -98,19 +99,19 @@ process.on('unhandledRejection', async (err) => {
 
 
 // Handle SIGINT gracefully
-process.on('SIGINT', () => {
+process.on('SIGINT', async () => {
 	setTimeout(() => {
 		console.log(`${colors.red("[ERROR]")} Took too long to exit, exiting forcefully...`);
 		process.exit(1);
 	}, 10000)
-	console.log(`${colors.blue("[INFO]")} Stop received, exiting...`);
-	bot.destroy();
+	console.log(`${colors.blue("[Info]")} Stop received, exiting...`);
+	await bot.destroy();
 	user.logOff();
-	console.log(`${colors.blue("[INFO]")} Goodbye!`);
+	console.log(`${colors.blue("[Info]")} Goodbye!`);
 	process.exit(0);
 });
 
-console.log(`${colors.cyan("[INFO]")} Starting...`)
+console.log(`${colors.cyan("[Info]")} Starting...`)
 // Start timer to see how long startup takes
 const initTime = Date.now()
 console.log(`${colors.cyan("[Steam]")} Logging into steam`);

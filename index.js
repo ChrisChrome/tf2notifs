@@ -78,6 +78,7 @@ tf2.on("displayNotification", (title, body) => {
 
 bot.on("ready", () => {
 	console.log(`[Discord] Logged in as ${bot.user.tag}`);
+	bot.user.setPresence(config.status);
 })
 
 bot.on("messageCreate", (msg) => {

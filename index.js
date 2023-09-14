@@ -82,7 +82,7 @@ bot.on("ready", () => {
 })
 
 bot.on("messageCreate", (msg) => {
-	if(msg.author.bot) return;
+	if(!msg.webhookId) return;
 	if (config.discord.channels.includes(msg.channel.id)) {
 		msg.crosspost();
 	}
